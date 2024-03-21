@@ -1,8 +1,11 @@
 #include "kalman_filter.h"
+#include <iostream>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using namespace std;
+using std::cout;
+using std::endl;
 
 /* 
  * Please note that the Eigen library does not initialize 
