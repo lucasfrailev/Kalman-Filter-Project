@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This repository contains a C++ implementation of the Extended Kalman Filter (EKF), designed to track the position and velocity of a bicycle moving around a vehicle using simulated LIDAR and RADAR measurements. The project is part of the Self-Driving Car Engineer Nanodegree Program and serves as a practical application of Kalman Filters in the field of autonomous driving.
+This repository contains a C++ implementation of the Extended Kalman Filter (EKF), designed to track the position and velocity of a vehicle moving around a stationary sensor suite using simulated LIDAR and RADAR measurements. The project is part of the Self-Driving Car Engineer Nanodegree Program and serves as a practical application of Kalman Filters in the field of autonomous driving.
 
 The simulation environment provided along with this project visualizes the tracking process, where:
 - LIDAR measurements are shown as red circles.
