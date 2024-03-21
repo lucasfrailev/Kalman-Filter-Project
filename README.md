@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-This repository contains a C++ implementation of the Extended Kalman Filter (EKF), designed to track the position and velocity of a vehicle moving around a stationary sensor suite using simulated LIDAR and RADAR measurements. The project is part of the Self-Driving Car Engineer Nanodegree Program and serves as a practical application of Kalman Filters in the field of autonomous driving.
+This repository contains a C++ implementation of the Extended Kalman Filter (EKF) for sensor fusion, designed to track the position and velocity of a vehicle moving around a stationary sensor suite using simulated LIDAR and RADAR measurements. The project is part of Udacity's Self-Driving Car Engineer Nanodegree Program and serves as a practical application of Kalman Filters in the field of autonomous driving. 
+
+Why is the standard Kalman Filter, not enough in this case? The RADAR measurements consist of $\rho$, $\theta$, and $\dot{\rho}$ representing the distance, angle, and speed, respectively as measured from the origin. As these are polar coordinates, and the map between polar and cartesian coordinates is non-linear, we are forced to use an Extended Kalman Filter, resorting to Jacobians for the RADAR measurement update.
 
 The simulation environment provided along with this project visualizes the tracking process, where:
 - LIDAR measurements are shown as red circles.
@@ -11,10 +13,17 @@ The simulation environment provided along with this project visualizes the track
 
 ## Demo Videos
 
-- **Video 1 - Zoomed Out View:** ![View Video 1](EKFZoomOut,mp4)
-- **Video 2 - Zoomed In View:** ![View Video 2](EKFZoomIn.mp4)
+The videos demonstrate the filter's ability to accurately track the vehicles's movement, despite the inherent noise in LIDAR and RADAR measurements.
 
-The videos demonstrate the filter's ability to accurately track the bicycle's movement, despite the inherent noise in LIDAR and RADAR measurements.
+- **Video 1 - Zoomed In View:** 
+
+https://github.com/lucasfrailev/Kalman-Filter-Project/assets/47170229/b32bc7c6-7f42-4e69-a22c-aacda4706a7c
+
+
+- **Video 2 - Zoomed Out View:**
+
+https://github.com/lucasfrailev/Kalman-Filter-Project/assets/47170229/94dda6af-acf7-4d52-abd7-069e051306af
+
 
 ## Getting Started
 
