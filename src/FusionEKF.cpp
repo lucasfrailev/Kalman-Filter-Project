@@ -72,16 +72,16 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       // TODO: Convert radar from polar to cartesian coordinates 
       //         and initialize state.
-      while (raw_measurements_(1)> (atan(1)*4)){
-        raw_measurements_(1)-= 2 * atan(1)*4;
+      while (measurement_pack.raw_measurements_(1)> (atan(1)*4)){
+        measurement_pack.raw_measurements_(1)-= 2 * atan(1)*4;
       }
-      while (raw_measurements_(1)< (-atan(1)*4)){
-        raw_measurements_(1)+= 2 * atan(1)*4;
+      while (measurement_pack.raw_measurements_(1)< (-atan(1)*4)){
+        measurement_pack.raw_measurements_(1)+= 2 * atan(1)*4;
       }
-      ekf_.x_ << meas_package.raw_measurements_(0) * cos(raw_measurements_(1)), 
-                 meas_package.raw_measurements_(0) * sin(raw_measurements_(1)),
-                 meas_package.raw_measurements_(2) * cos(raw_measurements_(1)),
-                 meas_package.raw_measurements_(2) * sin(raw_measurements_(1))
+      ekf_.x_ << meas_package.raw_measurements_(0) * cos(measurement_pack.raw_measurements_(1)), 
+                 meas_package.raw_measurements_(0) * sin(measurement_pack.raw_measurements_(1)),
+                 meas_package.raw_measurements_(2) * cos(measurement_pack.raw_measurements_(1)),
+                 meas_package.raw_measurements_(2) * sin(measurement_pack.raw_measurements_(1))
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
