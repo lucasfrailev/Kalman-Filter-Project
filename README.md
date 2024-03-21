@@ -29,7 +29,7 @@ https://github.com/lucasfrailev/Kalman-Filter-Project/assets/47170229/94dda6af-a
 
 ### Quick EKF review
 
-In what follows we use the notation:
+This is intended as a quick review of the important quantities and equations from an implementation perspective, for a deeper understanding of what is going on under the hood, I recommend this nice tutorial [tutorialEKF.pdf](https://github.com/lucasfrailev/Kalman-Filter-Project/files/14705645/tutorialEKF.pdf). In what follows we use the notation:
 
 - State vector: $x_k \in \mathbb{R}^{n \times 1}$
 - Approximate (estimate) State vector: $x^a_k \in \mathbb{R}^{n \times 1}$
@@ -83,6 +83,8 @@ Similarly, the observation map for Laser measurements is linear, $H$, resulting 
 - Make >= 4.1 (Linux, Mac), 3.81 (Windows)
 - GCC/G++ >= 5.4
 - [uWebSocketIO](https://github.com/uNetworking/uWebSockets) for interfacing with the simulator.
+- If on Windows, it might be easier to use Docker. This handy guide will get you through the process in no time [Docker+Windows+Starter+Guide.pdf](https://github.com/lucasfrailev/Kalman-Filter-Project/files/14705677/Docker%2BWindows%2BStarter%2BGuide.pdf).
+
 
 ### Simulator
 The Term 2 Simulator, which contains this and other projects for the Self-Driving Car Nanodegree, can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases).
