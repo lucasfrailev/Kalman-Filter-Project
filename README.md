@@ -13,7 +13,7 @@ The simulation environment provided along with this project visualizes the track
 
 ## Demo Videos
 
-The videos demonstrate the filter's ability to accurately track the vehicles's movement, despite the inherent noise in LIDAR and RADAR measurements.
+The videos demonstrate the filter's ability to accurately track the vehicles's movement, despite the inherent noise in LIDAR and RADAR measurements. Of note, and underscoring the importance of sensor fusion in robotic applications, we obtain an estimate that is noticeably more accurate than what one would expect using just one of the available sensors.
 
 - **Video 1 - Zoomed In View:** 
 
