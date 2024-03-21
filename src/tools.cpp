@@ -18,7 +18,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
   // Initialize RSME vector as zeros and compute length of ground_truth
   Eigen::MatrixXd RSME_;
-  RSME_ = MatrixXd::Zero(4);
+  RSME_ = MatrixXd::Zero(4,4);
   uint32_t n = ground_truth.size();
 
   // If the length of 'estimations' does not match that of 'ground_truth', or the later is zero, return a warning
