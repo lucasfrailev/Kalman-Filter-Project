@@ -4,6 +4,7 @@
 using Eigen::VectorXd;
 using Eigen::MatrixXd;
 using std::vector;
+using namespace std;
 
 Tools::Tools() {}
 
@@ -16,8 +17,8 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   */
 
   // Initialize RSME vector as zeros and compute length of ground_truth
-  RSME_ = MatrixXd::Zero(4);
-  int n = ground_truth.size();
+  Eigen::MatrixXd RSME_ = MatrixXd::Zero(4);
+  uint32_t n = ground_truth.size();
 
   // If the length of 'estimations' does not match that of 'ground_truth', or the later is zero, return a warning
   if (n != estimations.size() || n == 0 ){
