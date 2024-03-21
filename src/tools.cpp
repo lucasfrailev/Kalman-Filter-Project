@@ -29,7 +29,8 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
   // We use a simple algebra trick to compute the weighted square of the scalar differences in a single line
   for (int i=0;i<n;i++){
-   RSME_ += 1.0 / n * ((estimations[i] - ground_truth[i]) * (estimations[i] - ground_truth[i]).transpose()).diagonal();
+   // RSME_ += 1.0 / n * ((estimations[i] - ground_truth[i]) * (estimations[i] - ground_truth[i]).transpose()).diagonal();
+   RSME_ += estimations[i];
   }
   // Return the square root of the sum
    return RSME_.array().sqrt();
