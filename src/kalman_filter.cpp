@@ -27,7 +27,8 @@ void KalmanFilter::Predict() {
    * TODO: predict the state
    */
 
-  x_ = F_*x_;
+  x_ = F_ * x_;
+
   P_ = F_ * P_ * F_.transpose() + Q_; 
 }
 
@@ -48,7 +49,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 
   float square_root_sum = std::pow(x_(0) * x_(0) + x_(1) * x_(1),0.5);
   float cross_product = x_(3) * x_(1) - x_(4) * x_(0);
-  VectorXd x_est = VectorXd(4);
+  VectorXd x_est = VectorXd(3);
   x_est << square_root_sum, atan2(x_(0),x_(1)), cross_product/square_root_sum;
   MatrixXd S_ = H_ * P_ * H_.transpose() + R_;
   MatrixXd K_ = P_ * H_.transpose() * S_.inverse();
