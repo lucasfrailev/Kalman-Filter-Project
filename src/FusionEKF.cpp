@@ -155,7 +155,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     while (radar_measurements_(1)< (-atan(1)*4)){
       radar_measurements_(1)+= 2 * atan(1)*4;
     }
-    ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+    ekf_.UpdateEKF(radar_measurements_);
   } else {
     // TODO: Laser updates
     ekf_.H_ = H_laser_;
