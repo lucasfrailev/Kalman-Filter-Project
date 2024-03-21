@@ -72,21 +72,25 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       // TODO: Convert radar from polar to cartesian coordinates 
       //         and initialize state.
-      while (measurement_pack.raw_measurements_(1)> (atan(1)*4)){
-        measurement_pack.raw_measurements_(1)-= 2 * atan(1)*4;
+      radar_measurements_ =  VectorXd(3);
+      radar_measurements_ = measurement_pack.raw_measurements_;
+      while (radar_measurements_(1)> (atan(1)*4)){
+        radar_measurements_(1)-= 2 * atan(1)*4;
       }
-      while (measurement_pack.raw_measurements_(1)< (-atan(1)*4)){
-        measurement_pack.raw_measurements_(1)+= 2 * atan(1)*4;
+      while (radar_measurements_(1)< (-atan(1)*4)){
+        radar_measurements_(1)+= 2 * atan(1)*4;
       }
-      ekf_.x_ << meas_package.raw_measurements_(0) * cos(measurement_pack.raw_measurements_(1)), 
-                 meas_package.raw_measurements_(0) * sin(measurement_pack.raw_measurements_(1)),
-                 meas_package.raw_measurements_(2) * cos(measurement_pack.raw_measurements_(1)),
-                 meas_package.raw_measurements_(2) * sin(measurement_pack.raw_measurements_(1))
+      ekf_.x_ << radar_measurements_(0) * cos(radar_measurements_(1)), 
+                 radar_measurements_(0) * sin(radar_measurements_(1)),
+                 radar_measurements_(2) * cos(radar_measurements_(1)),
+                 radar_measurements_(2) * sin(radar_measurements_(1))
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
-      ekf_.x_ << meas_package.raw_measurements_(0), 
-                 meas_package.raw_measurements_(1),
+      laser_measurements_ = VectorXd(2);
+      laser_measurements_ = measurement_pack.raw_measurements_;
+      ekf_.x_ << laser_measurements_(0), 
+                 laser_measurements_(1),
                  0,
                  0;
     }
@@ -140,13 +144,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // TODO: Radar updates
-    ekf.H_ = Tools::CalculateJacobian(ekf.x_);
-    ekf.R_ = R_radar_;
+    ekf_.H_ = Tools::CalculateJacobian(ekf_.x_);
+    ekf_.R_ = R_radar_;
     KalmanFilter::UpdateEKF(meas_package.raw_measurements_);
   } else {
     // TODO: Laser updates
-    ekf.H_ = H_laser_;
-    ekf.R_ = R_laser_;
+    ekf_.H_ = H_laser_;
+    ekf_.R_ = R_laser_;
     KalmanFilter::Update(meas_package.raw_measurements_);
   }
 
