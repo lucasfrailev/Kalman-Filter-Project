@@ -51,7 +51,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
    Eigen::MatrixXd Hj_;
    Hj_ = MatrixXd::Zero(3,4);
   // Avoid division by zero
-  if (fabs(sum_of_squares) < 0.0001) {
+  if (fabs(sum_of_squares) < 0.00001) {
     cout << "CalculateJacobian () - Error - Division by Zero" << endl;
     return Hj_;
   }
