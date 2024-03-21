@@ -17,7 +17,8 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   */
 
   // Initialize RSME vector as zeros and compute length of ground_truth
-  Eigen::MatrixXd RSME_ = MatrixXd::Zero(4);
+  Eigen::MatrixXd RSME_;
+  RSME_ = MatrixXd::Zero(4);
   uint32_t n = ground_truth.size();
 
   // If the length of 'estimations' does not match that of 'ground_truth', or the later is zero, return a warning
@@ -45,7 +46,8 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
    float square_root_sum = std::pow(sum_of_squares,0.5);
    float cross_product = x_state(3) * x_state(1) - x_state(4) * x_state(0);
 
-   Eigen::MatrixXd Hj_ = MatrixXd::Zero(3,4);
+   Eigen::MatrixXd Hj_;
+   Hj_ = MatrixXd::Zero(3,4);
   // Avoid division by zero
   if (fabs(sum_of_squares) < 0.0001) {
     cout << "CalculateJacobian () - Error - Division by Zero" << endl;
