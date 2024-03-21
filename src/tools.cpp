@@ -19,17 +19,17 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   // Initialize RSME vector as zeros and compute length of ground_truth
   Eigen::MatrixXd RSME_;
   RSME_ = VectorXd::Zero(4);
-  uint32_t n = ground_truth.size();
+  int n = estimations.size();
 
   // If the length of 'estimations' does not match that of 'ground_truth', or the later is zero, return a warning
-  if (n != estimations.size() || n == 0 ){
+  if (ground_truth.size() != estimations.size() || n == 0 ){
    cout << "Invalid estimation or ground_truth data" << endl;
    return RSME_;
   }
 
   // We use a simple algebra trick to compute the weighted square of the scalar differences in a single line
   for (int i=0;i<n;i++){
-   RSME_ += 1.0 / n * ((estimations[i] - ground_truth[i]) * (estimations[i] - ground_truth[i]).transpose()).diagonal();
+   RSME_ += 1.0 / n * ((estimations(i) - ground_truth(i)) * (estimations(i) - ground_truth(i)).transpose()).diagonal();
   }
   // Return the square root of the sum
    return RSME_.array().sqrt();
