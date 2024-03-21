@@ -27,6 +27,31 @@ https://github.com/lucasfrailev/Kalman-Filter-Project/assets/47170229/94dda6af-a
 
 ## Getting Started
 
+### Quick EKF review
+
+The Extended Kalman Filter (EKF) operates on a model and observation framework, where:
+
+- The model is given by $x_k = f(x_{k-1}) + w_{k-1}$ and
+- The observation is $z_k = h(x_k) + v_k$.
+
+#### Initialization
+
+- Initial state estimate: $x_{a0} = \mu_0$ with error covariance $P_0$.
+
+#### Model Forecast Step/Predictor
+
+1. The predicted state estimate $x_{fk} \approx f(x_{a{k-1}})$.
+2. The predicted error covariance  $P_{fk} = J_f(x_{a{k-1}})P_{k-1}J_f^T(x_{a{k-1}}) + Q_{k-1}$..
+
+#### Data Assimilation Step/Corrector
+
+1. The updated state estimate $x_{ak} \approx x_{fk} + K_k(z_k - h(x_{fk}))$.
+2. The Kalman Gain $K_k = P_{fk} J_h^T(x_{fk})(J_h(x_{fk})P_{fk} J_h^T(x_{fk}) + R_k)^{-1}$.
+3. The updated error covariance $P_k = (I - K_k J_h(x_{fk})) P_{fk}$.
+
+The EKF employs a linear approximation to handle nonlinear models and observations by utilizing Taylor Series expansions and Jacobians ($J_f$ and $J_h$ for the model and observation functions, respectively). This summary encapsulates the core mathematical framework and steps involved in executing the Extended Kalman Filter process.
+
+
 ### Dependencies
 - CMake >= 3.5
 - Make >= 4.1 (Linux, Mac), 3.81 (Windows)
@@ -39,11 +64,17 @@ The Term 2 Simulator, which contains this and other projects for the Self-Drivin
 ### Setup and Build Instructions
 1. **Clone this repository** to your local machine.
 2. **Navigate to the project directory** and create a build directory:
-mkdir build && cd build
+
+```mkdir build && cd build```
+
 3. **Compile the project**:
-cmake .. && make
+
+```cmake .. && make```
+
 4. **Run the Extended Kalman Filter**:
-./ExtendedKF
+
+```./ExtendedKF```
+
 5. **Launch the Simulator** and select the Extended Kalman Filter project to see the filter in action.
 
 ## Code Structure
@@ -53,9 +84,6 @@ The main components of the code include:
 - `src/kalman_filter.cpp`: Defines the predict and update equations.
 - `src/tools.cpp`: Contains functions to calculate root mean squared error (RMSE) and the Jacobian matrix.
 
-## Contributing
-
-Contributions to improve the project are welcome. Please follow the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) for your contributions.
 
 ## License
 
