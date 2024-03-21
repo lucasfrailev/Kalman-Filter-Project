@@ -72,7 +72,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       // TODO: Convert radar from polar to cartesian coordinates 
       //         and initialize state.
-      Eigen::Vector radar_measurements_ =  VectorXd(3);
+      Eigen::VectorXd radar_measurements_ =  VectorXd(3);
       radar_measurements_ = measurement_pack.raw_measurements_;
       while (radar_measurements_(1)> (atan(1)*4)){
         radar_measurements_(1)-= 2 * atan(1)*4;
@@ -87,7 +87,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
-      Eigen::Vector laser_measurements_ = VectorXd(2);
+      Eigen::VectorXd laser_measurements_ = VectorXd(2);
       laser_measurements_ = measurement_pack.raw_measurements_;
       ekf_.x_ << laser_measurements_(0), 
                  laser_measurements_(1),
@@ -144,14 +144,15 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // TODO: Radar updates
-    ekf_.H_ = Tools::CalculateJacobian(ekf_.x_);
+    Hj_ = tools.CalculateJacobian(ekf_.x_);
+    ekf_.H_ = Hj_;
     ekf_.R_ = R_radar_;
-    KalmanFilter::UpdateEKF(meas_package.raw_measurements_);
+    ekf_.UpdateEKF(measurement_pack.raw_measurements_);
   } else {
     // TODO: Laser updates
     ekf_.H_ = H_laser_;
     ekf_.R_ = R_laser_;
-    KalmanFilter::Update(meas_package.raw_measurements_);
+    ekf_.Update(measurement_pack.raw_measurements_);
   }
 
   // print the output
