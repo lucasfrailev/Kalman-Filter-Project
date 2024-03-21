@@ -58,7 +58,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
    Hj_(0,0) = x_state(0) / square_root_sum;
    Hj_(0,1) = x_state(1) / square_root_sum;
    Hj_(1,0) =-x_state(1) / sum_of_squares;
-   Hj_(1,1) =-x_state(0) / sum_of_squares;
+   Hj_(1,1) = x_state(0) / sum_of_squares;
    Hj_(2,0) =-x_state(1) * cross_product / (square_root_sum * sum_of_squares);
    Hj_(2,1) = x_state(0) * cross_product / (square_root_sum * sum_of_squares);
    Hj_(2,2) = x_state(0) / square_root_sum;
