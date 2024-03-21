@@ -11,8 +11,8 @@ The simulation environment provided along with this project visualizes the track
 
 ## Demo Videos
 
-- **Video 1 - Zoomed Out View:** ![View Video 1](link-to-vid1)
-- **Video 2 - Zoomed In View:** ![View Video 2](link-to-vid2)
+- **Video 1 - Zoomed Out View:** ![View Video 1](EKFZoomOut,mp4)
+- **Video 2 - Zoomed In View:** ![View Video 2](EKFZoomIn.mp4)
 
 The videos demonstrate the filter's ability to accurately track the bicycle's movement, despite the inherent noise in LIDAR and RADAR measurements.
 
