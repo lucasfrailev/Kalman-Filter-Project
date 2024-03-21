@@ -57,6 +57,9 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   x_est << square_root_sum, atan2(x_(0),x_(1)), aux_sum/square_root_sum;
   MatrixXd S_ = H_ * P_ * H_.transpose() + R_;
   MatrixXd K_ = P_ * H_.transpose() * S_.inverse();
-  x_ = x_ + K_ * (z - x_est);
+  VectorXd y = (z - x_est);
+  while (y(1) > M_PI) y(1) -= 2 * M_PI;
+  while (y(1) < -M_PI) y(1) += 2 * M_PI;
+  x_ = x_ + K_ * y;
   P_ = (MatrixXd::Identity(x_.size(),x_.size())- K_ * H_) * P_;
 }

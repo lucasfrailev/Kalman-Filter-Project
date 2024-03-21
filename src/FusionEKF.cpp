@@ -147,15 +147,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     Hj_ = tools.CalculateJacobian(ekf_.x_);
     ekf_.H_ = Hj_;
     ekf_.R_ = R_radar_;
-    Eigen::VectorXd radar_measurements_ =  VectorXd(3);
-    radar_measurements_ = measurement_pack.raw_measurements_;
-    while (radar_measurements_(1)> (atan(1)*4)){
-      radar_measurements_(1)-= 2 * atan(1)*4;
-    }
-    while (radar_measurements_(1)< (-atan(1)*4)){
-      radar_measurements_(1)+= 2 * atan(1)*4;
-    }
-    ekf_.UpdateEKF(radar_measurements_);
+    ekf_.UpdateEKF(measurement_pack.raw_measurements_);
   } else {
     // TODO: Laser updates
     ekf_.H_ = H_laser_;
