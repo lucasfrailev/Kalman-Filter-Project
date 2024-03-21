@@ -1,4 +1,4 @@
-# Extended Kalman Filter in C++ for Object Tracking
+# Object Tracking through Sensor Fusion and an Extended Kalman Filter in C++
 
 ## Project Overview
 
