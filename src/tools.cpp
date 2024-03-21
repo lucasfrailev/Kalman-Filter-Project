@@ -27,7 +27,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   }
 
   // We use a simple algebra trick to compute the weighted square of the scalar differences in a single line
-  for (i=0;i<n;i++){
+  for (int i=0;i<n;i++){
    RSME_ += 1.0 / n * (estimations[i] - ground_truth[i]) * MatrixXd::Identity(4,4) * (estimations[i] - ground_truth[i]);
   }
   // Return the square root of the sum
@@ -45,11 +45,11 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
    float square_root_sum = std::pow(sum_of_squares,0.5);
    float cross_product = x_state(3) * x_state(1) - x_state(4) * x_state(0);
 
-   Hj_ = MatrixXd::Zero(3,4);
+   Eigen::MatrixXd Hj_ = MatrixXd::Zero(3,4);
   // Avoid division by zero
   if (fabs(sum_of_squares) < 0.0001) {
     cout << "CalculateJacobian () - Error - Division by Zero" << endl;
-    return Hj;
+    return Hj_;
   }
    Hj_(0,0) = x_state(0) / square_root_sum;
    Hj_(0,1) = x_state(1) / square_root_sum;
