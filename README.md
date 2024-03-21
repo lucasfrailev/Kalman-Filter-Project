@@ -29,29 +29,55 @@ https://github.com/lucasfrailev/Kalman-Filter-Project/assets/47170229/94dda6af-a
 
 ### Quick EKF review
 
+In what follows we use the notation:
+
+- State vector: $x_k \in \mathbb{R}^{n \times 1}$
+- Approximate (estimate) State vector: $x^a_k \in \mathbb{R}^{n \times 1}$
+- Forecasted (predicted) State vector: $x^f_k \in \mathbb{R}^{n \times 1}$
+- Process noise vector: $w_k \in \mathbb{R}^{n \times 1}$
+- Observation vector: $z_k \in \mathbb{R}^{m \times 1}$
+- Measurement noise vector: $v_k \in \mathbb{R}^{m \times 1}$
+- Process nonlinear vector function: $f(\cdot) \in \mathbb{R}^{n \times 1}$
+- Observation nonlinear vector function: $h(\cdot) \in \mathbb{R}^{m \times 1}$
+- Process noise covariance matrix: $Q_k \in \mathbb{R}^{n \times n}$
+- Measurement noise covariance matrix: $R_k \in \mathbb{R}^{m \times m}$
+
 The Extended Kalman Filter (EKF) operates on a model and observation framework, where:
 
-- The model is given by $x_k = f(x_{k-1}) + w_{k-1}$ and
+- The model is given by $x_k = f(x_{k-1}) + w_{k-1}$
 - The observation is $z_k = h(x_k) + v_k$.
 
 #### Initialization
 
-- Initial state estimate: $x_{a0} = \mu_0$ with error covariance $P_0$.
+- Initial state estimate: $x_{0} = z_0$ with error covariance $P_0$.
 
 #### Model Forecast Step/Predictor
 
-1. The predicted state estimate $x_{fk} \approx f(x_{a{k-1}})$.
-2. The predicted error covariance  $P_{fk} = J_f(x_{a{k-1}})P_{k-1}J_f^T(x_{a{k-1}}) + Q_{k-1}$..
+1. The predicted state estimate $x^f_{k} \approx f(x^a_{k-1})$.
+2. The predicted error covariance  $P^f_{k} = J_f(x^a_{k-1})P_{k-1}J_f^T(x^a_{k-1}) + Q_{k-1}$..
 
 #### Data Assimilation Step/Corrector
 
-1. The updated state estimate $x_{ak} \approx x_{fk} + K_k(z_k - h(x_{fk}))$.
-2. The Kalman Gain $K_k = P_{fk} J_h^T(x_{fk})(J_h(x_{fk})P_{fk} J_h^T(x_{fk}) + R_k)^{-1}$.
-3. The updated error covariance $P_k = (I - K_k J_h(x_{fk})) P_{fk}$.
+1. The updated state estimate $x^a_{k} \approx x^f_{k} + K_k(z_k - h(x^f_{k}))$.
+2. The Kalman Gain $K_k = P^f_{k} J_h^T(x^f_{k})(J_h(x^f_{k})P^f_{k} J_h^T(x^f_{k}) + R_k)^{-1}$.
+3. The updated error covariance $P_k = (I - K_k J_h(x^f_{k})) P^f_{k}$.
 
-The EKF employs a linear approximation to handle nonlinear models and observations by utilizing Taylor Series expansions and Jacobians ($J_f$ and $J_h$ for the model and observation functions, respectively). This summary encapsulates the core mathematical framework and steps involved in executing the Extended Kalman Filter process.
+The EKF employs a linear approximation to handle nonlinear models and observations by utilizing Taylor Series expansions and Jacobians ($J_f$ and $J_h$ for the model and observation functions, respectively).
 
+For this particular application, $f(x)$ is linear, allowing us to replace it and $J_f$ for the state transition matrix $F{k-1}$, resulting in:
 
+#### Model Forecast Step/Predictor Simplified
+1. The predicted state estimate $x^f_{k} \approx F_{k-1} x^a_{k-1}$.
+2. The predicted error covariance  $P^f_{k} = F{k-1}P_{k-1}F^T{k-1} + Q_{k-1}$..
+
+Similarly, the observation map for Laser measurements is linear, $H$, resulting in:  
+
+#### Data Assimilation Step/Corrector Laser
+
+1. The updated state estimate $x^a_{k} \approx x^f_{k} + K_k(z_k - Hx^f_{k})$.
+2. The Kalman Gain $K_k = P^f_{k} H^THP^f_{k}H + R_k)^{-1}$.
+3. The updated error covariance $P_k = (I - K_k H) P^f_{k}$.
+   
 ### Dependencies
 - CMake >= 3.5
 - Make >= 4.1 (Linux, Mac), 3.81 (Windows)
