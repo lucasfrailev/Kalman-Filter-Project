@@ -83,7 +83,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       ekf_.x_ << radar_measurements_(0) * cos(radar_measurements_(1)), 
                  radar_measurements_(0) * sin(radar_measurements_(1)),
                  radar_measurements_(2) * cos(radar_measurements_(1)),
-                 radar_measurements_(2) * sin(radar_measurements_(1))
+                 radar_measurements_(2) * sin(radar_measurements_(1));
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
