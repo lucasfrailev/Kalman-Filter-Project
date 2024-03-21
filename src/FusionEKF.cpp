@@ -72,7 +72,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       // TODO: Convert radar from polar to cartesian coordinates 
       //         and initialize state.
-      radar_measurements_ =  VectorXd(3);
+      Eigen::Vector radar_measurements_ =  VectorXd(3);
       radar_measurements_ = measurement_pack.raw_measurements_;
       while (radar_measurements_(1)> (atan(1)*4)){
         radar_measurements_(1)-= 2 * atan(1)*4;
@@ -87,7 +87,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
-      laser_measurements_ = VectorXd(2);
+      Eigen::Vector laser_measurements_ = VectorXd(2);
       laser_measurements_ = measurement_pack.raw_measurements_;
       ekf_.x_ << laser_measurements_(0), 
                  laser_measurements_(1),
