@@ -1,6 +1,6 @@
 #include "kalman_filter.h"
 #include <iostream>
-#include "tools.h
+#include "tools.h"
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -87,6 +87,7 @@ void KalmanFilter::UpdateIteratedEKF(const VectorXd &z) {
 
   MatrixXd S_ = H_ * P_ * H_.transpose() + R_;
   MatrixXd K_ = P_ * H_.transpose() * S_.inverse();
+  VectorXd y = KalmanFilter::ComputeError(z);
   x_ = x_ + K_ * y;
   while ((K_ * y).squaredNorm() > 0.01){
     H_ = tools.CalculateJacobian(x_);
