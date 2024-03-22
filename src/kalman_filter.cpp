@@ -89,7 +89,9 @@ void KalmanFilter::UpdateIteratedEKF(const VectorXd &z) {
   MatrixXd K_ = P_ * H_.transpose() * S_.inverse();
   VectorXd y = KalmanFilter::ComputeError(z);
   x_ = x_ + K_ * y;
-  while ((K_ * y).squaredNorm() > 0.001){
+  int n = 0;
+  while ((K_ * y).squaredNorm() > std::pow(0.1,10) && n<100){
+    n++;
     H_ = tools.CalculateJacobian(x_);
     S_ = H_ * P_ * H_.transpose() + R_;
     K_ = P_ * H_.transpose() * S_.inverse();
