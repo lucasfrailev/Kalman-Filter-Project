@@ -1,5 +1,6 @@
 #include "kalman_filter.h"
 #include <iostream>
+#include "tools.h
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -61,5 +62,38 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   while (y(1) > M_PI) y(1) -= 2 * M_PI;
   while (y(1) < -M_PI) y(1) += 2 * M_PI;
   x_ = x_ + K_ * y;
+  P_ = (MatrixXd::Identity(x_.size(),x_.size())- K_ * H_) * P_;
+}
+
+VectorXd KalmanFilter::ComputeError(const VectorXd &z){
+    /**
+   * This function computes the error between state estimates and measurement. We will use it for the Iterated EKF
+   */
+
+  float square_root_sum = std::pow(x_(0) * x_(0) + x_(1) * x_(1),0.5);
+  float aux_sum = x_(0) * x_(2) + x_(1) * x_(3);
+  VectorXd x_est = VectorXd(3);
+  x_est << square_root_sum, atan2(x_(1),x_(0)), aux_sum/square_root_sum;
+  VectorXd y = (z - x_est);
+  while (y(1) > M_PI) y(1) -= 2 * M_PI;
+  while (y(1) < -M_PI) y(1) += 2 * M_PI;
+  return y;
+}
+
+void KalmanFilter::UpdateIteratedEKF(const VectorXd &z) {
+  /**
+   * TODO: update the state by using Extended Kalman Filter equations
+   */
+
+  MatrixXd S_ = H_ * P_ * H_.transpose() + R_;
+  MatrixXd K_ = P_ * H_.transpose() * S_.inverse();
+  x_ = x_ + K_ * y;
+  while ((K_ * y).squaredNorm() > 0.01){
+    H_ = tools.CalculateJacobian(x_);
+    S_ = H_ * P_ * H_.transpose() + R_;
+    K_ = P_ * H_.transpose() * S_.inverse();
+    y = KalmanFilter::ComputeError(z);
+    x_ = x_ + K_ * y;
+  }
   P_ = (MatrixXd::Identity(x_.size(),x_.size())- K_ * H_) * P_;
 }

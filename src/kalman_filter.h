@@ -46,6 +46,18 @@ class KalmanFilter {
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
+   /**
+   * Updates the state by using Iterated Extended Kalman Filter equations
+   * @param z The measurement at k+1
+   */
+  void UpdateIteratedEKF(const Eigen::VectorXd &z);
+
+  /**
+   * This function computes the error between state estimates and measurement. We will use it for the Iterated EKF
+   * @param z The measurement at k+1
+   */
+  VectorXd KalmanFilter::ComputeError(const VectorXd &z)
+
   // state vector
   Eigen::VectorXd x_;
 
