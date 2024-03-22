@@ -90,7 +90,7 @@ void KalmanFilter::UpdateIteratedEKF(const VectorXd &z) {
   VectorXd y = KalmanFilter::ComputeError(z);
   x_ = x_ + K_ * y;
   int n = 0;
-  while ((K_ * y).squaredNorm() > std::pow(0.1,3) && n<10){
+  while ((K_ * y).squaredNorm() > std::pow(0.1,2) && n<10){
     cout << "error = " << (K_ * y).squaredNorm() << endl;
     cout << "i = " << n << endl;
     n++;
