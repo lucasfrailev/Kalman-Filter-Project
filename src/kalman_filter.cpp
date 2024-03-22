@@ -44,6 +44,13 @@ void KalmanFilter::Update(const VectorXd &z) {
   MatrixXd S_ = H_ * P_ * H_.transpose() + R_;
   MatrixXd K_ = P_ * H_.transpose() * S_.inverse();
   x_ = x_ + K_ * (z - H_ * x_);
+  int n = 0;
+  while ((K_ * y).squaredNorm() > std::pow(0.1,10) && n<10){
+    cout << "error = " << (K_ * y).squaredNorm() << endl;
+    cout << "i = " << n << endl;
+    n++;
+    x_ = x_ + K_ * (z - H_ * x_);
+  }
   P_ = ( MatrixXd::Identity(x_.size(),x_.size())- K_ * H_) * P_;
 }
 
