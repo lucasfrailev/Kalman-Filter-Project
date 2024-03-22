@@ -1,134 +1,119 @@
-# Extended Kalman Filter Project Starter Code
-Self-Driving Car Engineer Nanodegree Program
+# Object Tracking through Sensor Fusion and an Extended Kalman Filter in C++
 
-In this project you will utilize a kalman filter to estimate the state of a moving object of interest with noisy lidar and radar measurements. Passing the project requires obtaining RMSE values that are lower than the tolerance outlined in the project rubric. 
+## Project Overview
 
-This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases).
+This repository contains a C++ implementation of the Extended Kalman Filter (EKF) for sensor fusion, designed to track the position and velocity of a vehicle moving around a stationary sensor suite using simulated LIDAR and RADAR measurements. The project is part of Udacity's Self-Driving Car Engineer Nanodegree Program and serves as a practical application of Kalman Filters in the field of autonomous driving. 
 
-This repository includes two files that can be used to set up and install [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) for either Linux or Mac systems. For windows you can use either Docker, VMware, or even [Windows 10 Bash on Ubuntu](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/) to install uWebSocketIO. Please see the uWebSocketIO Starter Guide page in the classroom within the EKF Project lesson for the required version and installation scripts.
+Why is the standard Kalman Filter, not enough in this case? The RADAR measurements consist of $\rho$, $\theta$, and $\dot{\rho}$ representing the distance, angle, and speed, respectively as measured from the origin. As these are polar coordinates, and the map between polar and cartesian coordinates is non-linear, we are forced to use an Extended Kalman Filter, resorting to Jacobians for the RADAR measurement update.
 
-Once the install for uWebSocketIO is complete, the main program can be built and run by doing the following from the project top directory.
+The simulation environment provided along with this project visualizes the tracking process, where:
+- LIDAR measurements are shown as red circles.
+- RADAR measurements are represented by blue circles with arrows pointing in the direction of the observed angle.
+- The Kalman Filter's estimations are depicted as green triangles.
 
-1. mkdir build
-2. cd build
-3. cmake ..
-4. make
-5. ./ExtendedKF
+## Demo Videos
 
-Tips for setting up your environment can be found in the classroom lesson for this project.
+The videos demonstrate the filter's ability to accurately track the vehicles's movement, despite the inherent noise in LIDAR and RADAR measurements. Of note, and underscoring the importance of sensor fusion in robotic applications, we obtain an estimate that is noticeably more accurate than what one would expect using just one of the available sensors.
 
-Note that the programs that need to be written to accomplish the project are src/FusionEKF.cpp, src/FusionEKF.h, kalman_filter.cpp, kalman_filter.h, tools.cpp, and tools.h
+- **Video 1 - Zoomed In View:** 
 
-The program main.cpp has already been filled out, but feel free to modify it.
-
-Here is the main protocol that main.cpp uses for uWebSocketIO in communicating with the simulator.
+https://github.com/lucasfrailev/Kalman-Filter-Project/assets/47170229/b32bc7c6-7f42-4e69-a22c-aacda4706a7c
 
 
-**INPUT**: values provided by the simulator to the c++ program
+- **Video 2 - Zoomed Out View:**
 
-["sensor_measurement"] => the measurement that the simulator observed (either lidar or radar)
+https://github.com/lucasfrailev/Kalman-Filter-Project/assets/47170229/94dda6af-acf7-4d52-abd7-069e051306af
 
 
-**OUTPUT**: values provided by the c++ program to the simulator
+## Getting Started
 
-["estimate_x"] <= kalman filter estimated position x
+### Quick EKF review
 
-["estimate_y"] <= kalman filter estimated position y
+This is intended as a quick review of the important quantities and equations from an implementation perspective, for a deeper understanding of what is going on under the hood, I recommend this nice tutorial [tutorialEKF.pdf](https://github.com/lucasfrailev/Kalman-Filter-Project/files/14705645/tutorialEKF.pdf). In what follows we use the notation:
 
-["rmse_x"]
+- State vector: $x_k \in \mathbb{R}^{n \times 1}$
+- Approximate (estimate) State vector: $x^a_k \in \mathbb{R}^{n \times 1}$
+- Forecasted (predicted) State vector: $x^f_k \in \mathbb{R}^{n \times 1}$
+- Process noise vector: $w_k \in \mathbb{R}^{n \times 1}$
+- Observation vector: $z_k \in \mathbb{R}^{m \times 1}$
+- Measurement noise vector: $v_k \in \mathbb{R}^{m \times 1}$
+- Process nonlinear vector function: $f(\cdot) \in \mathbb{R}^{n \times 1}$
+- Observation nonlinear vector function: $h(\cdot) \in \mathbb{R}^{m \times 1}$
+- Process noise covariance matrix: $Q_k \in \mathbb{R}^{n \times n}$
+- Measurement noise covariance matrix: $R_k \in \mathbb{R}^{m \times m}$
 
-["rmse_y"]
+The Extended Kalman Filter (EKF) operates on a model and observation framework, where:
 
-["rmse_vx"]
+- The model is given by $x_k = f(x_{k-1}) + w_{k-1}$
+- The observation is $z_k = h(x_k) + v_k$.
 
-["rmse_vy"]
+#### Initialization
 
----
+- Initial state estimate: $x_{0} = z_0$ with error covariance $P_0$.
 
-## Other Important Dependencies
+#### Model Forecast Step/Predictor
 
-* cmake >= 3.5
-  * All OSes: [click here for installation instructions](https://cmake.org/install/)
-* make >= 4.1 (Linux, Mac), 3.81 (Windows)
-  * Linux: make is installed by default on most Linux distros
-  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
-  * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
-* gcc/g++ >= 5.4
-  * Linux: gcc / g++ is installed by default on most Linux distros
-  * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
-  * Windows: recommend using [MinGW](http://www.mingw.org/)
+1. The predicted state estimate $x^f_{k} \approx f(x^a_{k-1})$.
+2. The predicted error covariance  $P^f_{k} = J_f(x^a_{k-1})P_{k-1}J_f^T(x^a_{k-1}) + Q_{k-1}$..
 
-## Basic Build Instructions
+#### Data Assimilation Step/Corrector
 
-1. Clone this repo.
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make` 
-   * On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
-4. Run it: `./ExtendedKF `
+1. The updated state estimate $x^a_{k} \approx x^f_{k} + K_k(z_k - h(x^f_{k}))$.
+2. The Kalman Gain $K_k = P^f_{k} J_h^T(x^f_{k})(J_h(x^f_{k})P^f_{k} J_h^T(x^f_{k}) + R_k)^{-1}$.
+3. The updated error covariance $P_k = (I - K_k J_h(x^f_{k})) P^f_{k}$.
 
-## Editor Settings
+The EKF employs a linear approximation to handle nonlinear models and observations by utilizing Taylor Series expansions and Jacobians ($J_f$ and $J_h$ for the model and observation functions, respectively).
 
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
+For this particular application, $f(x)$ is linear, allowing us to replace it and $J_f$ for the state transition matrix $F{k-1}$, resulting in:
 
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
+#### Model Forecast Step/Predictor Simplified
+1. The predicted state estimate $x^f_{k} \approx F_{k-1} x^a_{k-1}$.
+2. The predicted error covariance  $P^f_{k} = F{k-1}P_{k-1}F^T{k-1} + Q_{k-1}$..
 
-## Code Style
+Similarly, the observation map for Laser measurements is linear, $H$, resulting in:  
 
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
+#### Data Assimilation Step/Corrector Laser
 
-## Generating Additional Data
+1. The updated state estimate $x^a_{k} \approx x^f_{k} + K_k(z_k - Hx^f_{k})$.
+2. The Kalman Gain $K_k = P^f_{k} H^THP^f_{k}H + R_k)^{-1}$.
+3. The updated error covariance $P_k = (I - K_k H) P^f_{k}$.
+   
+### Dependencies
+- CMake >= 3.5
+- Make >= 4.1 (Linux, Mac), 3.81 (Windows)
+- GCC/G++ >= 5.4
+- [uWebSocketIO](https://github.com/uNetworking/uWebSockets) for interfacing with the simulator.
+- If on Windows, it might be easier to use Docker. This handy guide will get you through the process in no time [Docker+Windows+Starter+Guide.pdf](https://github.com/lucasfrailev/Kalman-Filter-Project/files/14705677/Docker%2BWindows%2BStarter%2BGuide.pdf).
 
-This is optional!
 
-If you'd like to generate your own radar and lidar data, see the
-[utilities repo](https://github.com/udacity/CarND-Mercedes-SF-Utilities) for
-Matlab scripts that can generate additional data.
+### Simulator
+The Term 2 Simulator, which contains this and other projects for the Self-Driving Car Nanodegree, can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases).
 
-## Project Instructions and Rubric
+### Setup and Build Instructions
+1. **Clone this repository** to your local machine.
+2. **Navigate to the project directory** and create a build directory:
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
+```mkdir build && cd build```
 
-More information is only accessible by people who are already enrolled in Term 2 (three-term version) or Term 1 (two-term version)
-of CarND. If you are enrolled, see the Project Resources page in the classroom
-for instructions and the project rubric.
+3. **Compile the project**:
 
-## Hints and Tips!
+```cmake .. && make```
 
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
-* Students have reported rapid expansion of log files when using the term 2 simulator.  This appears to be associated with not being connected to uWebSockets.  If this does occur,  please make sure you are conneted to uWebSockets. The following workaround may also be effective at preventing large log files.
+4. **Run the Extended Kalman Filter**:
 
-    + create an empty log file
-    + remove write permissions so that the simulator can't write to log
- * Please note that the ```Eigen``` library does not initialize ```VectorXd``` or ```MatrixXd``` objects with zeros upon creation.
+```./ExtendedKF```
 
-## Call for IDE Profiles Pull Requests
+5. **Launch the Simulator** and select the Extended Kalman Filter project to see the filter in action.
 
-Help your fellow students!
+## Code Structure
 
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to ensure
-that students don't feel pressured to use one IDE or another.
+The main components of the code include:
+- `src/FusionEKF.cpp`: Initializes the filter, calls the predict function, updates the filter for LIDAR and RADAR measurements.
+- `src/kalman_filter.cpp`: Defines the predict and update equations.
+- `src/tools.cpp`: Contains functions to calculate root mean squared error (RMSE) and the Jacobian matrix.
 
-However! We'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
 
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
+## License
 
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
-
-Regardless of the IDE used, every submitted project must
-still be compilable with cmake and make.
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
