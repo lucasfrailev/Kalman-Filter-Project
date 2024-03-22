@@ -91,6 +91,7 @@ void KalmanFilter::UpdateIteratedEKF(const VectorXd &z) {
   x_ = x_ + K_ * y;
   int n = 0;
   while ((K_ * y).squaredNorm() > std::pow(0.1,10) && n<100){
+    cout << "error = " << (K_ * y).squaredNorm() << endl;
     n++;
     H_ = tools.CalculateJacobian(x_);
     S_ = H_ * P_ * H_.transpose() + R_;
