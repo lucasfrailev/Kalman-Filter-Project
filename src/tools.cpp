@@ -45,7 +45,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
    // These will come out handy to keep the code "clean"
    float sum_of_squares = x_state(0) * x_state(0) + x_state(1) * x_state(1);
-   float square_root_sum = std::pow(sum_of_squares,0.5);
+   float square_root_sum = std::sqrt(sum_of_squares);
    float cross_product = x_state(3) * x_state(0) - x_state(2) * x_state(1);
 
    Eigen::MatrixXd Hj_;
