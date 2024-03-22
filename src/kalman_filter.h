@@ -56,7 +56,7 @@ class KalmanFilter {
    * This function computes the error between state estimates and measurement. We will use it for the Iterated EKF
    * @param z The measurement at k+1
    */
-  Eigen::VectorXd KalmanFilter::ComputeError(const Eigen::VectorXd &z)
+  Eigen::VectorXd ComputeError(const Eigen::VectorXd &z);
 
   // state vector
   Eigen::VectorXd x_;
