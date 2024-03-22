@@ -76,6 +76,9 @@ class KalmanFilter {
 
   // measurement covariance matrix
   Eigen::MatrixXd R_;
+  
+  // tool object used to compute Jacobian and RMSE
+  Tools tools;
 };
 
 #endif // KALMAN_FILTER_H_
